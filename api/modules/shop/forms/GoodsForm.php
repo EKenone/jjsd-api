@@ -13,6 +13,7 @@ class GoodsForm extends Goods
     use FormModelValidate;
 
     const DEDUCT_STOCK = 'deduct_stock';
+    const ADD_STOCK = 'add_stock';
 
     /**
      * @return array|array[]
@@ -37,6 +38,7 @@ class GoodsForm extends Goods
             self::SCENARIO_UPDATE => ['id', 'name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format'],
             self::SCENARIO_DESTROY => ['id'],
             self::DEDUCT_STOCK => ['id', 'stock'],
+            self::ADD_STOCK => ['id', 'stock'],
         ];
     }
 

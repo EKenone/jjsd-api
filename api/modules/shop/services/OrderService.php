@@ -8,6 +8,7 @@ use api\modules\shop\forms\OrderForm;
 use api\modules\shop\models\CustomerAddress;
 use api\modules\shop\models\Goods;
 use api\modules\shop\models\Order;
+use api\modules\shop\models\OrderGoods;
 use api\modules\shop\resources\OrderResource;
 use api\modules\shop\search\OrderSearch;
 use common\helpers\BaseHelper;
@@ -133,6 +134,17 @@ class OrderService extends Service
         $form->load($data, '');
         if (!$form->save()) {
             return $form;
+        }
+
+        if ($form->status == Order::STATUS_REFUSE) {
+            $list = OrderGoods::findAll(['order_id' => $form->id]);
+            $service = new GoodsService();
+            foreach ($list as $item) {
+                $service->addStock([
+                    'id' => $item->goods_id,
+                    'stock' => $item->book_num
+                ]);
+            }
         }
 
         return [];

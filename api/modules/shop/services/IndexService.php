@@ -31,10 +31,10 @@ class IndexService extends Service
 
         $orderNum = $orderDelivery = $orderCredit = 0;
         foreach ($orderStatusNum as $item) {
-            if (in_array($item['status'], [2, 3, 4, 5])) {
+            if (in_array($item['status'], [Order::STATUS_GONE, Order::STATUS_SETTLED, Order::STATUS_WAIT_SETTLE, Order::STATUS_REFUSE])) {
                 $orderDelivery += $item['num'];
             }
-            if ($item['status'] == 4) {
+            if ($item['status'] == Order::STATUS_WAIT_SETTLE) {
                 $orderCredit += $item['num'];
             }
             $orderNum += $item['num'];
@@ -78,11 +78,11 @@ class IndexService extends Service
                 $orderData[$item['date']] = ['num' => 0, 'delivery' => 0, 'credit' => 0];
             }
 
-            if (in_array($item['status'], [2, 3, 4, 5])) {
+            if (in_array($item['status'], [Order::STATUS_GONE, Order::STATUS_SETTLED, Order::STATUS_WAIT_SETTLE, Order::STATUS_REFUSE])) {
                 $orderData[$item['date']]['delivery'] += $item['num'];
             }
 
-            if ($item['status'] == 4) {
+            if ($item['status'] == Order::STATUS_WAIT_SETTLE) {
                 $orderData[$item['date']]['credit'] += $item['num'];
             }
 

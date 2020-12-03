@@ -123,6 +123,36 @@ class GoodsService extends Service
     }
 
     /**
+     * 增加库存
+     * @param array $data
+     * @return GoodsForm
+     * @throws UserException
+     */
+    public function addStock($data = [])
+    {
+        $form = $this->formValidate($data, GoodsForm::ADD_STOCK);
+        if ($form->hasErrors()) {
+            return $form;
+        }
+
+        $goods = Goods::findOne($form->id);
+
+        // 库存不能减扣就不扣了
+        if (!$goods || $goods->stock < 0) {
+            return $form;
+        }
+
+        $goods->stock = bcadd($goods->stock, $form->stock, 2);
+
+        if (!$goods->save()) {
+            \Yii::error($goods->getFirstErrors());
+            $form->addErrors($goods->errors);
+        }
+
+        return $form;
+    }
+
+    /**
      * @param array $data
      * @param null $scenes
      * @return GoodsForm
