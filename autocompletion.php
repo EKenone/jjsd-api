@@ -18,6 +18,7 @@ class Yii extends \yii\BaseYii
  *
  * @property \sizeg\jwt\Jwt $jwt
  * @property \yii\redis\Connection $redis
+ * @property \yii\elasticsearch\Connection $elasticsearch
  */
 abstract class BaseApplication extends yii\base\Application
 {

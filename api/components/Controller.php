@@ -90,17 +90,21 @@ class Controller extends \yii\rest\Controller
      */
     public static function esLog($result)
     {
-//        $log = new OperateLog();
-//        $log->operation_id = \Yii::$app->user->id;
-//        $log->operation_name = ArrayHelper::getValue(\Yii::$app->user->identity, 'name', '');
-//        $log->request_data = ['get' => \Yii::$app->request->get(), 'post' => \Yii::$app->request->post()];
-//        $log->request_time = date('Y-m-d');
-//        $log->uri = \Yii::$app->request->getPathInfo();
-//        $log->ip = \Yii::$app->request->getUserIP();
-//        $log->response_data = Json::encode($result);
-//        $log->response_time = date('Y-m-d');
-//        $log->user_ip = \Yii::$app->request->getHeaders()->get('x-real-ip');
-//        $log->save();
+        if (!isset(\Yii::$app->elasticsearch)) {
+            return $result;
+        }
+
+        $log = new OperateLog();
+        $log->operation_id = \Yii::$app->user->id;
+        $log->operation_name = ArrayHelper::getValue(\Yii::$app->user->identity, 'name', '');
+        $log->request_data = ['get' => \Yii::$app->request->get(), 'post' => \Yii::$app->request->post()];
+        $log->request_time = date('Y-m-d');
+        $log->uri = \Yii::$app->request->getPathInfo();
+        $log->ip = \Yii::$app->request->getUserIP();
+        $log->response_data = Json::encode($result);
+        $log->response_time = date('Y-m-d');
+        $log->user_ip = \Yii::$app->request->getHeaders()->get('x-real-ip');
+        $log->save();
 
         return $result;
     }
