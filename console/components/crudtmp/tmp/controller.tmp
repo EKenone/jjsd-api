@@ -1,0 +1,58 @@
+<?php
+
+
+namespace {{BASE_NAMESPACE}}\controllers;
+
+
+use {{SERVICE}};
+use yii\base\UserException;
+
+/**
+ * Class GoodsFormatController
+ * @package {{BASE_NAMESPACE}}\controllers
+ *
+ * @property {{SERVICE_NAME}} $service
+ */
+class {{MODEL_NAME}}Controller extends {{CONTROLLER}}
+{
+    /**
+     * @var string
+     */
+    public string $serviceClass = {{SERVICE_NAME}}::class;
+
+    /**
+     * @return mixed
+     * @throws UserException
+     */
+    public function actionIndex()
+    {
+        return $this->service->index(\Yii::$app->request->get());
+    }
+
+    /**
+     * @return mixed
+     * @throws UserException
+     */
+    public function actionStore()
+    {
+        return $this->service->store(\Yii::$app->request->post());
+    }
+
+    /**
+     * @return mixed
+     * @throws UserException
+     */
+    public function actionUpdate()
+    {
+        return $this->service->update(\Yii::$app->request->post());
+    }
+
+    /**
+     * @return mixed
+     * @throws UserException
+     */
+    public function actionDestroy()
+    {
+        return $this->service->destroy(\Yii::$app->request->post());
+    }
+}

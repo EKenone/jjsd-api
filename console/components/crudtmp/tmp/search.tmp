@@ -1,0 +1,79 @@
+<?php
+
+
+namespace {{BASE_NAMESPACE}}\search;
+
+
+use common\traits\SearchModelScenesTrait;
+use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
+
+class  {{MODEL_NAME}}Search extends \{{RESOURCE}}
+{
+    use SearchModelScenesTrait;
+
+    public $keyword;
+    public $created_start;
+    public $created_end;
+    public $no_page;
+
+    /**
+     * @return array|array[]
+     */
+    public function rules()
+    {
+        return [
+            [['keyword'], 'trim'],
+            [['no_page'], 'in', 'range' => [1, 0]],
+            [['created_start', 'created_end',  $this->scenesProperty()], 'safe'],
+        ];
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function baseQuery(): ActiveQuery
+    {
+        return self::find()->notDelete();
+    }
+
+    /**
+     * @param ActiveQuery $query
+     * @return ActiveDataProvider
+     */
+    public function commonSearch(ActiveQuery $query): ActiveDataProvider
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query
+        ]);
+
+        if ($this->keyword) {
+            $query->andWhere(['like', self::withDatabaseName('title'), $this->keyword]);
+        }
+
+        if ($this->created_start) {
+            $query->andWhere(['>=', self::withDatabaseName('created_at'), strtotime($this->created_start)]);
+        }
+
+        if ($this->created_end) {
+            $query->andWhere(['<=', self::withDatabaseName('created_at'), strtotime($this->created_end)]);
+        }
+
+        if ($this->no_page) {
+            $dataProvider->pagination = false;
+        }
+
+        $query->addOrderBy([self::withDatabaseName('id')=>SORT_DESC]);
+
+        return $dataProvider;
+    }
+
+    /**
+     * 这里是index场景对sql的特殊处理
+     * @param ActiveQuery $query
+     */
+    protected function scenesIndex(ActiveQuery $query)
+    {
+        $query->with(['customer']);
+    }
+}

@@ -1,0 +1,69 @@
+<?php
+
+
+namespace api\modules\shop\forms;
+
+
+use api\modules\shop\models\Goods;
+use common\traits\FormModelValidate;
+use yii\helpers\Json;
+
+class GoodsForm extends Goods
+{
+    use FormModelValidate;
+
+    const DEDUCT_STOCK = 'deduct_stock';
+
+    /**
+     * @return array|array[]
+     */
+    public function rules()
+    {
+        return [
+            [['id', 'name', 'number', 'unit', 'short_name', 'format'], 'required'],
+            [['purchase_price', 'retail_price', 'wholesale_price'], 'number'],
+            [['stock'], 'number', 'min' => -1],
+            [['img_source'], $this->validateMethod(), 'skipOnEmpty' => false],
+        ];
+    }
+
+    /**
+     * @return array|array[]|\string[][]
+     */
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_STORE => ['name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format'],
+            self::SCENARIO_UPDATE => ['id', 'name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format'],
+            self::SCENARIO_DESTROY => ['id'],
+            self::DEDUCT_STOCK => ['id', 'stock'],
+        ];
+    }
+
+    /**
+     *
+     */
+    public function validateImgSource()
+    {
+        if ($this->img_source && is_array($this->img_source)) {
+            $source = [];
+            foreach ($this->img_source as $item) {
+                $source[] = ltrim(parse_url($item, PHP_URL_PATH), '/');
+            }
+            $this->img_source = Json::encode($source);
+        } else {
+            $this->img_source = '';
+        }
+
+    }
+
+    /**
+     * 删除
+     * @return bool
+     */
+    public function destroy()
+    {
+        $this->is_del = self::IS_DEL_YES;
+        return $this->save();
+    }
+}

@@ -1,0 +1,79 @@
+<?php
+
+
+namespace {{BASE_NAMESPACE}}\services;
+
+
+use {{FORM}};
+use {{RESOURCE}};
+use {{SEARCH}};
+use yii\base\UserException;
+
+class {{MODEL_NAME}}Service extends Service
+{
+    /**
+     * @var string
+     */
+    public $formClass = {{FORM_NAME}}::class;
+
+    /**
+     * @var string
+     */
+    public $resourceClass = {{RESOURCE_NAME}}::class;
+
+    /**
+     * @var string
+     */
+    public $searchClass = {{SEARCH_NAME}}::class;
+
+    /**
+     * @param array $params
+     * @return mixed
+     * @throws UserException
+     */
+    public function index($params = [])
+    {
+        return parent::index($params);
+    }
+
+    /**
+     * 商品单位详情
+     * @param int $id
+     * @return {{RESOURCE_NAME}}
+     * @throws UserException
+     */
+    public function show($id)
+    {
+        return parent::show($id);
+    }
+
+    /**
+     * @param array $data
+     * @return {{FORM_NAME}}
+     * @throws UserException
+     */
+    public function store($data = [])
+    {
+        return parent::store($data);
+    }
+
+    /**
+     * @param array $data
+     * @return {{FORM_NAME}}
+     * @throws UserException
+     */
+    public function update($data = [])
+    {
+        return parent::update($data);
+    }
+
+    /**
+     * @param array $data
+     * @return {{FORM_NAME}}
+     * @throws UserException
+     */
+    public function destroy($data = [])
+    {
+        return parent::destroy($data);
+    }
+}
