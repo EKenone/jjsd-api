@@ -8,15 +8,12 @@ use api\modules\shop\models\Goods;
 
 class GoodsResource extends Goods
 {
+    /**
+     * @return \Closure[]
+     */
     public function fieldShow()
     {
         return [
-            'id' => function () {
-                return $this->id;
-            },
-            'name' => function () {
-                return $this->name;
-            },
             'short_name' => function () {
                 return $this->short_name;
             },
@@ -44,30 +41,24 @@ class GoodsResource extends Goods
         ];
     }
 
+    /**
+     * @return \Closure[]
+     */
     public function fieldSelect()
     {
         return [
-            'id' => function () {
-                return $this->id;
-            },
-            'name' => function () {
-                return $this->name;
-            },
             'unit' => function () {
                 return $this->unit;
             },
         ];
     }
 
+    /**
+     * @return \Closure[]
+     */
     public function fieldIndex()
     {
         return [
-            'id' => function () {
-                return $this->id;
-            },
-            'name' => function () {
-                return $this->name;
-            },
             'short_name' => function () {
                 return $this->short_name;
             },
@@ -98,6 +89,21 @@ class GoodsResource extends Goods
             'created_date' => function () {
                 return date('Y-m-d H:i:s', $this->created_at);
             }
+        ];
+    }
+
+    /**
+     * @return array|\Closure[]
+     */
+    public function base()
+    {
+        return [
+            'id' => function () {
+                return $this->id;
+            },
+            'name' => function () {
+                return $this->name;
+            },
         ];
     }
 }

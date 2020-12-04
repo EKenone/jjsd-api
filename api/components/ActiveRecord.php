@@ -10,6 +10,12 @@ use common\traits\DatabaseNameTrait;
 use common\traits\ModelFieldTypeTrait;
 use yii\db\ActiveRecord as BaseActiveRecord;
 
+/**
+ * Class ActiveRecord
+ * @package api\components
+ * @property integer $id
+ * @property integer $is_del
+ */
 class ActiveRecord extends BaseActiveRecord
 {
     use DatabaseNameTrait, ModelFieldTypeTrait;

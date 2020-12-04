@@ -9,23 +9,17 @@ use yii\helpers\ArrayHelper;
 
 class CustomerAddressResource extends CustomerAddress
 {
+    /**
+     * @return \Closure[]
+     */
     public function fieldIndex()
     {
         return [
-            'id' => function () {
-                return $this->id;
-            },
             'customer_id' => function () {
                 return $this->customer_id;
             },
             'customer_name' => function () {
                 return ArrayHelper::getValue($this->customer, 'name', '');
-            },
-            'consignee' => function () {
-                return $this->consignee;
-            },
-            'contact_tel' => function () {
-                return $this->contact_tel;
             },
             'address' => function () {
                 return $this->address;
@@ -36,7 +30,22 @@ class CustomerAddressResource extends CustomerAddress
         ];
     }
 
+    /**
+     * @return \Closure[]
+     */
     public function fieldShow()
+    {
+        return [
+            'address' => function () {
+                return $this->address;
+            },
+        ];
+    }
+
+    /**
+     * @return array|\Closure[]
+     */
+    public function base()
     {
         return [
             'id' => function () {
@@ -47,10 +56,7 @@ class CustomerAddressResource extends CustomerAddress
             },
             'contact_tel' => function () {
                 return $this->contact_tel;
-            },
-            'address' => function () {
-                return $this->address;
-            },
+            }
         ];
     }
 }
