@@ -100,7 +100,7 @@ class RolePermissionService extends Service
             $aside[] = $menu->setFieldType(RolePermissionResource::ADMIN_ROLE_MENU)->toArray();
 
         }
-        \Yii::error($aside);
+
         return [
             'header' => $header,
             'aside' => array_values(BaseHelper::tree($aside))
