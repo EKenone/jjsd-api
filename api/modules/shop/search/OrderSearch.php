@@ -24,6 +24,7 @@ class OrderSearch extends OrderResource
     {
         return [
             [['keyword', 'order_no'], 'trim'],
+            [['status'], 'in', 'range' => array_keys(self::statusMap())],
             [['created_start', 'created_end', $this->scenesProperty()], 'safe'],
         ];
     }
@@ -44,6 +45,10 @@ class OrderSearch extends OrderResource
     {
         $dataProvider = new ActiveDataProvider([
             'query' => $query
+        ]);
+
+        $query->andFilterWhere([
+            self::withDatabaseName('status') => $this->status
         ]);
 
         if ($this->keyword) {

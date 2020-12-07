@@ -16,9 +16,12 @@ use Yii;
  * @property string $name 商品全称
  * @property string $number 商品编号
  * @property string $unit 单位
+ * @property string $format 单位
  * @property int $purchase_price 进货价(单位：分)（快照）
  * @property int $price 单价(单位：分)
  * @property float $book_num 下订数量
+ * @property string $product_date 生产日期
+ * @property string $shelf_life 保质日期
  * @property int $is_del 是否删除（0-否，1-是）
  * @property int $created_at
  * @property int $updated_at
@@ -45,7 +48,8 @@ class OrderGoods extends ActiveRecord
             [['order_id', 'goods_id', 'purchase_price', 'price', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 128],
             [['book_num'], 'number'],
-            [['number', 'unit'], 'string', 'max' => 255],
+            [['number'], 'string', 'max' => 255],
+            [['unit', 'format', 'product_date', 'shelf_life'], 'string', 'max' => 15],
         ];
     }
 
@@ -61,9 +65,12 @@ class OrderGoods extends ActiveRecord
             'name' => '商品全称',
             'number' => '商品编号',
             'unit' => '单位',
+            'format' => '规格',
             'purchase_price' => '进货价(单位：分)（快照）',
             'price' => '单价(单位：分)',
             'book_num' => '下订数量',
+            'product_date' => '生产日期',
+            'shelf_life' => '保质日期',
             'is_del' => '是否删除（0-否，1-是）',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

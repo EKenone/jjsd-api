@@ -23,6 +23,8 @@ use yii\helpers\Json;
  * @property float $retail_price 零售价
  * @property float $wholesale_price 批发价
  * @property string $img_source 商品展示资源
+ * @property string $product_date 生产日期
+ * @property string $shelf_life 保质日期
  * @property int $is_del 是否删除（0-否，1-是）
  * @property int $created_at
  * @property int $updated_at
@@ -52,7 +54,7 @@ class Goods extends ActiveRecord
             [['name'], 'string', 'max' => 128],
             [['short_name'], 'string', 'max' => 64],
             [['number'], 'string', 'max' => 255],
-            [['unit', 'format'], 'string', 'max' => 15],
+            [['unit', 'format', 'shelf_life', 'product_date'], 'string', 'max' => 15],
             [['img_source'], 'string', 'max' => 1000],
             [['purchase_price', 'retail_price', 'wholesale_price', 'stock'], 'number'],
         ];
@@ -75,6 +77,8 @@ class Goods extends ActiveRecord
             'retail_price' => '零售价',
             'wholesale_price' => '批发价',
             'img_source' => '商品展示资源',
+            'product_date' => '生产日期',
+            'shelf_life' => '保质日期',
             'is_del' => '是否删除（0-否，1-是）',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -101,7 +105,7 @@ class Goods extends ActiveRecord
         $source = [];
 
         $imgPath = $this->img_source ? Json::decode($this->img_source) : [];
-        foreach ($imgPath as $item){
+        foreach ($imgPath as $item) {
             $source[] = Yii::$app->params['img']['url'] . $item;
         }
 

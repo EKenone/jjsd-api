@@ -13,7 +13,6 @@ use api\modules\shop\resources\OrderResource;
 use api\modules\shop\search\OrderSearch;
 use common\helpers\BaseHelper;
 use yii\base\UserException;
-use yii\db\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
@@ -107,7 +106,9 @@ class OrderService extends Service
                 'format' => $item['format'],
                 'purchase_price' => $item['purchase_price'],
                 'price' => $item['price'],
-                'book_num' => $item['book_num']
+                'book_num' => $item['book_num'],
+                'product_date' => $item['product_date'],
+                'shelf_life' => $item['shelf_life']
             ];
         }
 
@@ -182,7 +183,9 @@ class OrderService extends Service
             'number',
             'unit',
             'format',
-            'purchase_price'
+            'purchase_price',
+            'product_date',
+            'shelf_life',
         ]), [
             'goods_id' => $form->goods_id,
             'book_num' => $form->book_num,
@@ -223,7 +226,7 @@ class OrderService extends Service
 
         $data = ArrayHelper::getValue($list, $form->book_id);
         if ($data) {
-            $info['total_price'] = number_format(bcsub($info['total_price'], - $data['total']), 2);
+            $info['total_price'] = number_format(bcsub($info['total_price'], -$data['total']), 2);
         }
 
         unset($list[$form->book_id]);
@@ -256,7 +259,7 @@ class OrderService extends Service
         // 商品总价
         $total = (($form->price * 100) * ($form->book_num * 100)) / 100;
 
-        $info['total_price'] = number_format(bcsub($info['total_price'], - $data['total']), 2);
+        $info['total_price'] = number_format(bcsub($info['total_price'], -$data['total']), 2);
 
         $data['book_num'] = $form->book_num;
         $data['price'] = number_format($form->price, 2);
@@ -321,15 +324,66 @@ class OrderService extends Service
         $prefix = date('Ymd');
         $orderNoArr = Order::find()
             ->select('order_no')
-            ->andWhere(['LIKE', 'order_no', $prefix.'%', false])
+            ->andWhere(['LIKE', 'order_no', $prefix . '%', false])
             ->orderBy('order_no ASC')
-            ->column()?: [];
+            ->column() ?: [];
 
         do {
             $orderNo = $prefix . mt_rand(1111, 9999);
         } while (in_array($orderNo, $orderNoArr));
 
         return $orderNo;
+    }
+
+    /**
+     * 打印的数据集合
+     * @param array $data
+     * @return array
+     * @throws UserException
+     * @throws \Exception
+     */
+    public function printData($data = [])
+    {
+        $order = Order::findOne($data['id']);
+        if (!$order) {
+            throw new UserException('订单不存在');
+        }
+
+        $provider = [
+            'name' => '健 健 综 合 店',
+            'address' => '城南北门街三幢108号',
+            'tel' => '0763-2214016',
+        ];
+
+        $customer = CustomerAddress::findOne($order->address_id)->toArray(['consignee', 'contact_tel', 'address']);
+
+        $orderData = [
+            'amount' => $order->amount,
+            'amount_chn' => BaseHelper::convertAmountToChn($order->amount),
+            'create_date' => date('Y-m-d', $order->created_at),
+            'print_date' => date('Y-m-d'),
+            'order_no' => $order->order_no
+        ];
+        $service = new OrderGoodsService();
+        $goodsList = $service->index([
+            'order_id' => $order->id,
+            'no_page' => 1
+        ])->getModels();
+
+        $len = count($goodsList);
+        if ($len < 7) {
+            $forLen = 7 - $len;
+            for ($i = 0; $i < $forLen; $i++) {
+                $goodsList[] = [];
+            }
+        }
+
+        return [
+            'provider' => $provider,
+            'customer' => $customer,
+            'order_data' => $orderData,
+            'goods_list' => $goodsList
+        ];
     }
 
     /**

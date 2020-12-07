@@ -24,6 +24,7 @@ class GoodsForm extends Goods
             [['id', 'name', 'number', 'unit', 'short_name', 'format'], 'required'],
             [['purchase_price', 'retail_price', 'wholesale_price'], 'number'],
             [['stock'], 'number', 'min' => -1],
+            [['product_date', 'shelf_life'], 'string'],
             [['img_source'], $this->validateMethod(), 'skipOnEmpty' => false],
         ];
     }
@@ -34,8 +35,8 @@ class GoodsForm extends Goods
     public function scenarios()
     {
         return [
-            self::SCENARIO_STORE => ['name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format'],
-            self::SCENARIO_UPDATE => ['id', 'name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format'],
+            self::SCENARIO_STORE => ['name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format', 'product_date', 'shelf_life'],
+            self::SCENARIO_UPDATE => ['id', 'name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format', 'product_date', 'shelf_life'],
             self::SCENARIO_DESTROY => ['id'],
             self::DEDUCT_STOCK => ['id', 'stock'],
             self::ADD_STOCK => ['id', 'stock'],

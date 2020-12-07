@@ -20,6 +20,9 @@ class OrderGoodsResource extends OrderGoods
             'unit' => function () {
                 return $this->unit;
             },
+            'format' => function () {
+                return $this->format;
+            },
             'price' => function () {
                 return $this->price;
             },
@@ -28,6 +31,15 @@ class OrderGoodsResource extends OrderGoods
             },
             'book_num' => function () {
                 return $this->book_num;
+            },
+            'number' => function () {
+                return $this->number;
+            },
+            'product_date' => function () {
+                return $this->product_date?: '请查看货物';
+            },
+            'shelf_life' => function () {
+                return $this->shelf_life;
             }
         ];
     }

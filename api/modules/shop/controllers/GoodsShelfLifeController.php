@@ -1,24 +1,24 @@
 <?php
 
 
-namespace {{BASE_NAMESPACE}}\controllers;
+namespace api\modules\shop\controllers;
 
 
-use {{SERVICE}};
+use api\modules\shop\services\GoodsShelfLifeService;
 use yii\base\UserException;
 
 /**
  * Class GoodsFormatController
- * @package {{BASE_NAMESPACE}}\controllers
+ * @package api\modules\shop\controllers
  *
- * @property {{SERVICE_NAME}} $service
+ * @property GoodsShelfLifeService $service
  */
-class {{MODEL_NAME}}Controller extends {{CONTROLLER}}
+class GoodsShelfLifeController extends \api\components\Controller
 {
     /**
      * @var string
      */
-    public $serviceClass = {{SERVICE_NAME}}::class;
+    public $serviceClass = GoodsShelfLifeService::class;
 
     /**
      * @return mixed

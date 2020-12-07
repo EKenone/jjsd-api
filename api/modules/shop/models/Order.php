@@ -104,4 +104,15 @@ class Order extends ActiveRecord
         return $this->hasOne(Customer::class, ['id' => 'customer_id']);
     }
 
+    public static function statusMap()
+    {
+        return [
+            self::STATUS_WAIT_GIVE => '待配送',
+            self::STATUS_GIVING => '配送中',
+            self::STATUS_GONE => '配送成功',
+            self::STATUS_SETTLED => '已结算',
+            self::STATUS_WAIT_SETTLE => '赊账',
+            self::STATUS_REFUSE => '退货',
+        ];
+    }
 }

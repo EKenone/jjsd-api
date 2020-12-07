@@ -1,14 +1,15 @@
 <?php
 
 
-namespace {{BASE_NAMESPACE}}\search;
+namespace api\modules\shop\search;
 
 
+use api\modules\shop\resources\GoodsShelfLifeResource;
 use common\traits\SearchModelScenesTrait;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
-class  {{MODEL_NAME}}Search extends \{{RESOURCE}}
+class  GoodsShelfLifeSearch extends GoodsShelfLifeResource
 {
     use SearchModelScenesTrait;
 
@@ -74,5 +75,6 @@ class  {{MODEL_NAME}}Search extends \{{RESOURCE}}
      */
     protected function scenesIndex(ActiveQuery $query)
     {
+
     }
 }

@@ -104,4 +104,13 @@ class OrderController extends Controller
     {
         return $this->service->bookUpdate(\Yii::$app->request->post());
     }
+
+    /**
+     * @return mixed
+     * @throws UserException
+     */
+    public function actionPrintData()
+    {
+        return $this->service->printData(\Yii::$app->request->get());
+    }
 }

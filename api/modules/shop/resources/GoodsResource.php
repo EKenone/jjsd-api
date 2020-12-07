@@ -86,6 +86,12 @@ class GoodsResource extends Goods
             'img_source' => function () {
                 return $this->imgSource();
             },
+            'product_date' => function () {
+                return $this->product_date;
+            },
+            'shelf_life' => function () {
+                return $this->shelf_life;
+            },
             'created_date' => function () {
                 return date('Y-m-d H:i:s', $this->created_at);
             }
