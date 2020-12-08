@@ -357,8 +357,9 @@ class OrderService extends Service
         }
 
         $provider = [
-            'name' => '健 健 综 合 店',
-            'address' => '城南北门街三幢108号',
+            'name_split' => '健 健 综 合 店',
+            'name' => '健健综合店',
+            'address' => '城北门街三幢102号',
             'tel' => '0763-2214016',
             'printer' => ArrayHelper::getValue(\Yii::$app->user->identity, 'name', '')
         ];
