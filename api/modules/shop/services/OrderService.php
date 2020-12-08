@@ -366,26 +366,28 @@ class OrderService extends Service
 
         $customer = CustomerAddress::findOne($order->address_id)->toArray(['consignee', 'contact_tel', 'address']);
 
-        $orderData = [
-            'amount' => $order->amount,
-            'amount_chn' => BaseHelper::convertAmountToChn($order->amount),
-            'create_date' => date('Y-m-d', $order->created_at),
-            'print_date' => date('Y-m-d'),
-            'order_no' => $order->order_no
-        ];
         $service = new OrderGoodsService();
         $goodsList = $service->index([
             'order_id' => $order->id,
             'no_page' => 1
         ])->getModels();
 
-        $len = count($goodsList);
-        if ($len < 7) {
-            $forLen = 7 - $len;
+        $totalGoods = count($goodsList);
+        if ($totalGoods < 7) {
+            $forLen = 7 - $totalGoods;
             for ($i = 0; $i < $forLen; $i++) {
                 $goodsList[] = [];
             }
         }
+
+        $orderData = [
+            'amount' => $order->amount,
+            'amount_chn' => BaseHelper::convertAmountToChn($order->amount),
+            'create_date' => date('Y-m-d', $order->created_at),
+            'print_date' => date('Y-m-d'),
+            'order_no' => $order->order_no,
+            'total_goods' => $totalGoods
+        ];
 
         return [
             'provider' => $provider,
