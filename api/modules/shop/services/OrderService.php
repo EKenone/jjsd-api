@@ -83,38 +83,45 @@ class OrderService extends Service
             return [];
         }
 
-        $order = $this->store([
-            'order_no' => self::getOrderNo(),
-            'customer_id' => $addressInfo->customer_id,
-            'address_id' => $addressInfo->id,
-            'consignee' => $addressInfo->consignee,
-            'contact_tel' => $addressInfo->contact_tel,
-            'address' => $addressInfo->address,
-            'amount' => $goodsInfo['total_price'],
-            'remark' => '',
-            'status' => 0
-        ]);
+        $tran = Order::getDb()->beginTransaction();
+        try {
+            $order = $this->store([
+                'order_no' => self::getOrderNo(),
+                'customer_id' => $addressInfo->customer_id,
+                'address_id' => $addressInfo->id,
+                'consignee' => $addressInfo->consignee,
+                'contact_tel' => $addressInfo->contact_tel,
+                'address' => $addressInfo->address,
+                'amount' => $goodsInfo['total_price'],
+                'remark' => '',
+                'status' => 0
+            ]);
 
-        $addData = [];
-        foreach ($goodsList as $item) {
-            $addData[] = [
-                'order_id' => $order->id,
-                'goods_id' => $item['goods_id'],
-                'name' => $item['name'],
-                'number' => $item['number'],
-                'unit' => $item['unit'],
-                'format' => $item['format'],
-                'purchase_price' => $item['purchase_price'],
-                'price' => $item['price'],
-                'book_num' => $item['book_num'],
-                'product_date' => $item['product_date'],
-                'shelf_life' => $item['shelf_life']
-            ];
-        }
+            $addData = [];
+            foreach ($goodsList as $item) {
+                $addData[] = [
+                    'order_id' => $order->id,
+                    'goods_id' => $item['goods_id'],
+                    'name' => $item['name'],
+                    'number' => $item['number'],
+                    'unit' => $item['unit'],
+                    'format' => $item['format'],
+                    'purchase_price' => $item['purchase_price'],
+                    'price' => $item['price'],
+                    'book_num' => $item['book_num'],
+                    'product_date' => $item['product_date'],
+                    'shelf_life' => $item['shelf_life']
+                ];
+            }
 
-        $service = new OrderGoodsService();
-        foreach ($addData as $item) {
-            $service->store($item);
+            $service = new OrderGoodsService();
+            foreach ($addData as $item) {
+                $service->store($item);
+            }
+            $tran->commit();
+        } catch (\Exception $e) {
+            $tran->rollBack();
+            throw new UserException($e->getMessage());
         }
 
         \Yii::$app->redis->del('BOOK_CAR:' . $form->address_id);
@@ -353,6 +360,7 @@ class OrderService extends Service
             'name' => '健 健 综 合 店',
             'address' => '城南北门街三幢108号',
             'tel' => '0763-2214016',
+            'printer' => ArrayHelper::getValue(\Yii::$app->user->identity, 'name', '')
         ];
 
         $customer = CustomerAddress::findOne($order->address_id)->toArray(['consignee', 'contact_tel', 'address']);
