@@ -18,6 +18,12 @@ class OrderResource extends Order
             'id' => function () {
                 return $this->id;
             },
+            'address_id' => function () {
+                return $this->address_id;
+            },
+            'customer_id' => function () {
+                return $this->customer_id;
+            },
             'order_no' => function () {
                 return $this->order_no;
             },

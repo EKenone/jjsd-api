@@ -7,6 +7,7 @@ use api\modules\shop\models\query\OrderQuery;
 use common\helpers\BaseHelper;
 use Yii;
 use yii\db\ActiveQuery;
+use yii\helpers\Json;
 
 /**
  * This is the model class for table "sd_order".
@@ -104,6 +105,9 @@ class Order extends ActiveRecord
         return $this->hasOne(Customer::class, ['id' => 'customer_id']);
     }
 
+    /**
+     * @return string[]
+     */
     public static function statusMap()
     {
         return [

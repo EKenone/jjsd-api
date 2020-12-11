@@ -55,6 +55,16 @@ class OrderController extends Controller
      * @throws Exception
      * @throws UserException
      */
+    public function actionUpdateInfo()
+    {
+        return $this->service->updateInfo(\Yii::$app->request->get());
+    }
+
+    /**
+     * @return mixed
+     * @throws Exception
+     * @throws UserException
+     */
     public function actionChangeStatus()
     {
         return $this->service->changeStatus(\Yii::$app->request->post());
