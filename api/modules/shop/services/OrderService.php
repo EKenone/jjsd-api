@@ -280,8 +280,8 @@ class OrderService extends Service
         ]), [
             'goods_id' => $form->goods_id,
             'book_num' => $form->book_num,
-            'price' => number_format($form->price, 2),
-            'total' => number_format($total, 2),
+            'price' => number_format($form->price, 2, '.', ''),
+            'total' => $total,
             'id' => $listNextId
         ]);
         $list[$listNextId] = $orderGoods;
