@@ -36,7 +36,7 @@ class OrderGoodsResource extends OrderGoods
                 return $this->number;
             },
             'product_date' => function () {
-                return $this->product_date?: '请查看货物';
+                return $this->product_date;
             },
             'shelf_life' => function () {
                 return $this->shelf_life;
