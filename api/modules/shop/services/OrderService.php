@@ -13,6 +13,7 @@ use api\modules\shop\models\OrderGoods;
 use api\modules\shop\resources\OrderResource;
 use api\modules\shop\search\OrderSearch;
 use common\helpers\BaseHelper;
+use common\helpers\ComplicateHelp;
 use yii\base\UserException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
@@ -153,7 +154,7 @@ class OrderService extends Service
             throw new UserException($e->getMessage());
         }
 
-        \Yii::$app->redis->del(self::bookCar($form->address_id, $order->id));
+        \Yii::$app->redis->del(self::bookCar($form->address_id, $form->id));
 
         return [];
     }
@@ -249,6 +250,10 @@ class OrderService extends Service
             return $form;
         }
 
+        // 防止并发请求计算错误
+        $bookCarLock = 'BOOK_CAR_LOCK_' . (int)$form->address_id . '_' . (int)$form->order_id;
+        ComplicateHelp::lock($bookCarLock);
+
         $goods = Goods::find()->notDelete()->andWhere(['id' => $form->goods_id])->one();
         if (!$goods) {
             throw new UserException('商品已下架');
@@ -287,6 +292,8 @@ class OrderService extends Service
 
         self::bookCarSave($bookCar, $list, $info);
 
+        ComplicateHelp::unlock($bookCarLock);
+
         return [];
     }
 
@@ -302,6 +309,11 @@ class OrderService extends Service
         if ($form->hasErrors()) {
             return $form;
         }
+
+        // 防止并发请求计算错误
+        $bookCarLock = 'BOOK_CAR_LOCK_' . (int)$form->address_id . '_' . (int)$form->order_id;
+        ComplicateHelp::lock($bookCarLock);
+
         $bookCar = self::bookCar($form->address_id, $form->order_id);
         if (!$form->book_id) {
             \Yii::$app->redis->del($bookCar);
@@ -312,12 +324,14 @@ class OrderService extends Service
 
         $data = ArrayHelper::getValue($list, $form->book_id);
         if ($data) {
-            $info['total_price'] = number_format(bcsub($info['total_price'], -$data['total']), 2);
+            $info['total_price'] = bcsub($info['total_price'], $data['total'], 2);
         }
 
         unset($list[$form->book_id]);
 
         self::bookCarSave($bookCar, $list, $info);
+
+        ComplicateHelp::unlock($bookCarLock);
 
         return [];
     }
@@ -335,6 +349,10 @@ class OrderService extends Service
             return $form;
         }
 
+        // 防止并发请求计算错误
+        $bookCarLock = 'BOOK_CAR_LOCK_' . (int)$form->address_id . '_' . (int)$form->order_id;
+        ComplicateHelp::lock($bookCarLock);
+
         $bookCar = self::bookCar($form->address_id, $form->order_id);
         list($list, $info) = self::getBookData($form->address_id, $form->order_id);
 
@@ -342,18 +360,21 @@ class OrderService extends Service
         if (!$data) {
             return [];
         }
-        // 商品总价
-        $total = (($form->price * 100) * ($form->book_num * 100)) / 100;
 
-        $info['total_price'] = number_format(bcsub($info['total_price'], $data['total']), 2);
+        // 商品总价
+        $total = bcmul($form->price, $form->book_num, 2);
+
+        $info['total_price'] = bcadd(bcsub($info['total_price'], $data['total'], 2), $total, 2);
 
         $data['book_num'] = $form->book_num;
         $data['price'] = number_format($form->price, 2);
-        $data['total'] = BaseHelper::pennyToYuan($total);
+        $data['total'] = $total;
 
         $list[$form->book_id] = $data;
 
         self::bookCarSave($bookCar, $list, $info);
+
+        ComplicateHelp::unlock($bookCarLock);
 
         return [];
     }
