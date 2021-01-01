@@ -5,15 +5,17 @@ namespace api\modules\shop\search;
 
 
 use api\modules\shop\resources\OrderGoodsResource;
+use common\traits\FormModelValidate;
 use common\traits\SearchModelScenesTrait;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
 class OrderGoodsSearch extends OrderGoodsResource
 {
-    use SearchModelScenesTrait;
+    use FormModelValidate, SearchModelScenesTrait;
 
     public $no_page;
+    public $sort_val;
 
     /**
      * @return array|array[]
@@ -23,6 +25,7 @@ class OrderGoodsSearch extends OrderGoodsResource
         return [
             [['order_id'], 'integer'],
             [['no_page'], 'in', 'range' => [0, 1]],
+            [['sort_val'], 'sortValToArr'],
         ];
     }
 
@@ -50,6 +53,10 @@ class OrderGoodsSearch extends OrderGoodsResource
 
         if ($this->no_page) {
             $dataProvider->pagination = false;
+        }
+
+        if ($this->sort_val) {
+            $query->orderBy($this->sort_val);
         }
 
         $query->addOrderBy([self::withDatabaseName('id') => SORT_DESC]);

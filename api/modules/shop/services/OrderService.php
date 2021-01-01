@@ -486,7 +486,7 @@ class OrderService extends Service
             'name_split' => '健 健 综 合 店',
             'name' => '健健综合店',
             'address' => '城北门街三幢102号',
-            'tel' => '0763-2214016',
+            'tel' => '2214016、18948042348',
             'printer' => ArrayHelper::getValue(\Yii::$app->user->identity, 'name', '')
         ];
 
@@ -495,6 +495,7 @@ class OrderService extends Service
         $service = new OrderGoodsService();
         $goodsList = $service->index([
             'order_id' => $order->id,
+            'sort_val' => 'id_asc',
             'no_page' => 1
         ])->getModels();
 
