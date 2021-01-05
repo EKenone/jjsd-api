@@ -45,4 +45,21 @@ class ComplicateHelp
     {
         \Yii::$app->mutex->release($lockKey);
     }
+
+    /**
+     * 加锁并且释放锁
+     * @param \Closure $func
+     * @param string $lockKey 锁的key
+     * @param int $timeout 锁多长时间
+     * @param int $expire 锁的过期时间
+     * @param string $keyPrefix key前缀
+     * @return mixed
+     */
+    public static function lockAndFree(\Closure $func, $lockKey, $timeout = 10, $expire = 0, $keyPrefix = '')
+    {
+        self::lock($lockKey, $timeout, $expire, $keyPrefix);
+        $res = $func();
+        self::unlock($lockKey);
+        return $res;
+    }
 }

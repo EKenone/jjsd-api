@@ -92,7 +92,7 @@ class OrderService extends Service
 
         $addressInfo = CustomerAddress::findOne($form->address_id);
         list($goodsList, $goodsInfo) = self::getBookData($form->address_id, $form->order_id);
-        \Yii::error($goodsList);
+
         if (!$goodsList) {
             return [];
         }
