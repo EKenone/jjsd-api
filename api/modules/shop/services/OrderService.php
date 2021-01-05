@@ -251,48 +251,45 @@ class OrderService extends Service
         }
 
         // 防止并发请求计算错误
-        $bookCarLock = 'BOOK_CAR_LOCK_' . (int)$form->address_id . '_' . (int)$form->order_id;
-        ComplicateHelp::lock($bookCarLock);
+        self::bookLockFree(function () use ($form) {
+            $goods = Goods::find()->notDelete()->andWhere(['id' => $form->goods_id])->one();
+            if (!$goods) {
+                throw new UserException('商品已下架');
+            }
 
-        $goods = Goods::find()->notDelete()->andWhere(['id' => $form->goods_id])->one();
-        if (!$goods) {
-            throw new UserException('商品已下架');
-        }
+            list($list, $info) = self::getBookData($form->address_id, $form->order_id);
 
-        list($list, $info) = self::getBookData($form->address_id, $form->order_id);
+            // 收货地址的订货缓存标识
+            $bookCar = self::bookCar($form->address_id, $form->order_id);
 
-        // 收货地址的订货缓存标识
-        $bookCar = self::bookCar($form->address_id, $form->order_id);
+            // 商品总价
+            $total = bcmul($form->price, $form->book_num, 2);
 
-        // 商品总价
-        $total = bcmul($form->price, $form->book_num, 2);
+            $listNextId = $info['next_id'] ?? 1;
+            $totalPrice = isset($info['total_price']) ? bcadd($info['total_price'], $total, 2) : $total;
+            $orderGoods = array_merge($goods->toArray([
+                'name',
+                'number',
+                'unit',
+                'format',
+                'purchase_price',
+                'product_date',
+                'shelf_life',
+            ]), [
+                'goods_id' => $form->goods_id,
+                'book_num' => $form->book_num,
+                'price' => number_format($form->price, 2, '.', ''),
+                'total' => $total,
+                'id' => $listNextId
+            ]);
+            $list[$listNextId] = $orderGoods;
+            $info = [
+                'total_price' => $totalPrice,
+                'next_id' => $listNextId + 1
+            ];
 
-        $listNextId = $info['next_id'] ?? 1;
-        $totalPrice = isset($info['total_price']) ? bcadd($info['total_price'], $total, 2) : $total;
-        $orderGoods = array_merge($goods->toArray([
-            'name',
-            'number',
-            'unit',
-            'format',
-            'purchase_price',
-            'product_date',
-            'shelf_life',
-        ]), [
-            'goods_id' => $form->goods_id,
-            'book_num' => $form->book_num,
-            'price' => number_format($form->price, 2, '.', ''),
-            'total' => $total,
-            'id' => $listNextId
-        ]);
-        $list[$listNextId] = $orderGoods;
-        $info = [
-            'total_price' => $totalPrice,
-            'next_id' => $listNextId + 1
-        ];
-
-        self::bookCarSave($bookCar, $list, $info);
-
-        ComplicateHelp::unlock($bookCarLock);
+            self::bookCarSave($bookCar, $list, $info);
+        }, $form);
 
         return [];
     }
@@ -311,27 +308,24 @@ class OrderService extends Service
         }
 
         // 防止并发请求计算错误
-        $bookCarLock = 'BOOK_CAR_LOCK_' . (int)$form->address_id . '_' . (int)$form->order_id;
-        ComplicateHelp::lock($bookCarLock);
+        self::bookLockFree(function () use ($form) {
+            $bookCar = self::bookCar($form->address_id, $form->order_id);
+            if (!$form->book_id) {
+                \Yii::$app->redis->del($bookCar);
+                return;
+            }
 
-        $bookCar = self::bookCar($form->address_id, $form->order_id);
-        if (!$form->book_id) {
-            \Yii::$app->redis->del($bookCar);
-            return [];
-        }
+            list($list, $info) = self::getBookData($form->address_id, $form->order_id);
 
-        list($list, $info) = self::getBookData($form->address_id, $form->order_id);
+            $data = ArrayHelper::getValue($list, $form->book_id);
+            if ($data) {
+                $info['total_price'] = bcsub($info['total_price'], $data['total'], 2);
+            }
 
-        $data = ArrayHelper::getValue($list, $form->book_id);
-        if ($data) {
-            $info['total_price'] = bcsub($info['total_price'], $data['total'], 2);
-        }
+            unset($list[$form->book_id]);
 
-        unset($list[$form->book_id]);
-
-        self::bookCarSave($bookCar, $list, $info);
-
-        ComplicateHelp::unlock($bookCarLock);
+            self::bookCarSave($bookCar, $list, $info);
+        }, $form);
 
         return [];
     }
@@ -350,31 +344,28 @@ class OrderService extends Service
         }
 
         // 防止并发请求计算错误
-        $bookCarLock = 'BOOK_CAR_LOCK_' . (int)$form->address_id . '_' . (int)$form->order_id;
-        ComplicateHelp::lock($bookCarLock);
+        self::bookLockFree(function () use ($form){
+            $bookCar = self::bookCar($form->address_id, $form->order_id);
+            list($list, $info) = self::getBookData($form->address_id, $form->order_id);
 
-        $bookCar = self::bookCar($form->address_id, $form->order_id);
-        list($list, $info) = self::getBookData($form->address_id, $form->order_id);
+            $data = ArrayHelper::getValue($list, $form->book_id);
+            if (!$data) {
+                return;
+            }
 
-        $data = ArrayHelper::getValue($list, $form->book_id);
-        if (!$data) {
-            return [];
-        }
+            // 商品总价
+            $total = bcmul($form->price, $form->book_num, 2);
 
-        // 商品总价
-        $total = bcmul($form->price, $form->book_num, 2);
+            $info['total_price'] = bcadd(bcsub($info['total_price'], $data['total'], 2), $total, 2);
 
-        $info['total_price'] = bcadd(bcsub($info['total_price'], $data['total'], 2), $total, 2);
+            $data['book_num'] = $form->book_num;
+            $data['price'] = number_format($form->price, 2);
+            $data['total'] = $total;
 
-        $data['book_num'] = $form->book_num;
-        $data['price'] = number_format($form->price, 2);
-        $data['total'] = $total;
+            $list[$form->book_id] = $data;
 
-        $list[$form->book_id] = $data;
-
-        self::bookCarSave($bookCar, $list, $info);
-
-        ComplicateHelp::unlock($bookCarLock);
+            self::bookCarSave($bookCar, $list, $info);
+        }, $form);
 
         return [];
     }
@@ -522,6 +513,16 @@ class OrderService extends Service
             'order_data' => $orderData,
             'goods_list' => $goodsList
         ];
+    }
+
+    /**
+     * 下订操作的锁，为了统一锁key
+     * @param \Closure $func
+     * @param OrderForm $form
+     */
+    public static function bookLockFree(\Closure $func, OrderForm $form)
+    {
+        ComplicateHelp::lockAndFree($func, 'BOOK_CAR_LOCK_' . (int)$form->address_id . '_' . (int)$form->order_id);
     }
 
     /**

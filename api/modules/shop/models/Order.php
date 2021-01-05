@@ -2,6 +2,7 @@
 
 namespace api\modules\shop\models;
 
+use api\caches\traits\RefreshModelsCacheTrait;
 use api\components\ActiveRecord;
 use api\modules\shop\models\query\OrderQuery;
 use common\helpers\BaseHelper;
@@ -34,6 +35,8 @@ use yii\helpers\Json;
  */
 class Order extends ActiveRecord
 {
+    use RefreshModelsCacheTrait;
+
     const STATUS_WAIT_GIVE = 0;
     const STATUS_GIVING = 1;
     const STATUS_GONE = 2;

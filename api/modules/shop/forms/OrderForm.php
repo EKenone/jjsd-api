@@ -29,8 +29,8 @@ class OrderForm extends Order
     public function rules()
     {
         return [
-            [['id', 'order_no', 'customer_id', 'address_id', 'goods_id', 'price', 'book_num', 'consignee', 'contact_tel', 'address', 'amount'], 'required'],
-            [['remark'], 'string'],
+            [['id', 'order_no', 'customer_id', 'address_id', 'goods_id', 'price', 'book_num', 'consignee', 'address', 'amount'], 'required'],
+            [['remark', 'contact_tel'], 'default', 'value' => ''],
             [['status'], 'integer'],
             [['real_amount', 'order_id'], 'default', 'value' => 0],
         ];

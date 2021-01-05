@@ -14,8 +14,8 @@ class OrderGoodsForm extends OrderGoods
     public function rules()
     {
         return [
-            [['order_id', 'goods_id', 'name', 'number', 'unit', 'purchase_price', 'price', 'book_num', 'format'], 'required'],
-            [['product_date', 'shelf_life'], 'default', 'value' => '']
+            [['order_id', 'goods_id', 'name', 'unit', 'purchase_price', 'price', 'book_num', 'format'], 'required'],
+            [['product_date', 'shelf_life', 'number'], 'default', 'value' => '']
         ];
     }
 
