@@ -3,23 +3,21 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=yii2advanced',
+            'dsn' => 'mysql:host=11.11.11.114;dbname=jjsd',
             'username' => 'root',
-            'password' => '',
+            'password' => 'root',
             'charset' => 'utf8',
         ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            'viewPath' => '@common/mail',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => '11.11.11.114',
+            'port' => 6379,
+            'database' => 0,
         ],
         'elasticsearch' => [
             'class' => 'yii\elasticsearch\Connection',
             'nodes' => [
-                ['http_address' => '127.0.0.1:9200'],
+                ['http_address' => '11.11.11.114:9200'],
                 // configure more hosts if you have a cluster
             ],
             // set autodetectCluster to false if you don't want to auto detect nodes

@@ -21,10 +21,10 @@ class GoodsForm extends Goods
     public function rules()
     {
         return [
-            [['id', 'name', 'number', 'unit', 'short_name', 'format'], 'required'],
+            [['id', 'name', 'unit', 'short_name', 'format'], 'required'],
             [['purchase_price', 'retail_price', 'wholesale_price'], 'number'],
             [['stock'], 'number', 'min' => -1],
-            [['product_date', 'shelf_life'], 'string'],
+            [['product_date', 'shelf_life', 'number'], 'string'],
             [['img_source'], $this->validateMethod(), 'skipOnEmpty' => false],
         ];
     }

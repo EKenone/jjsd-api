@@ -129,4 +129,22 @@ trait FormModelValidate
     {
         $this->$attr = str_replace(',', '', $this->$attr);
     }
+
+    /**
+     * 规定好的排序格式转义
+     * @param $attr
+     */
+    public function sortValToArr($attr)
+    {
+        if ($this->$attr) {
+            $sortArr = [];
+            $arr = explode(',', $this->$attr);
+            \Yii::error($arr);
+            foreach ($arr as $item) {
+                $val = explode('_', $item);
+                $sortArr[$val[0]] = $val[1] == 'asc' ? SORT_ASC : SORT_DESC;
+            }
+            $this->$attr = $sortArr;
+        }
+    }
 }

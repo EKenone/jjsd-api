@@ -14,7 +14,8 @@ class CustomerAddressForm extends CustomerAddress
     public function rules()
     {
         return [
-            [['id', 'customer_id', 'consignee', 'contact_tel', 'address'], 'required']
+            [['id', 'customer_id', 'consignee', 'address'], 'required'],
+            [['contact_tel'], 'string']
         ];
     }
 
