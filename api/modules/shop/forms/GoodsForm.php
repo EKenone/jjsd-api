@@ -21,7 +21,7 @@ class GoodsForm extends Goods
     public function rules()
     {
         return [
-            [['id', 'name', 'unit', 'short_name', 'format'], 'required'],
+            [['id', 'name', 'unit', 'short_name', 'format', 'shop_id'], 'required'],
             [['purchase_price', 'retail_price', 'wholesale_price'], 'number'],
             [['stock'], 'number', 'min' => -1],
             [['product_date', 'shelf_life', 'number'], 'string'],
@@ -35,7 +35,7 @@ class GoodsForm extends Goods
     public function scenarios()
     {
         return [
-            self::SCENARIO_STORE => ['name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format', 'product_date', 'shelf_life'],
+            self::SCENARIO_STORE => ['shop_id', 'name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format', 'product_date', 'shelf_life'],
             self::SCENARIO_UPDATE => ['id', 'name', 'number', 'unit', 'short_name', 'purchase_price', 'retail_price', 'wholesale_price', 'img_source', 'stock', 'format', 'product_date', 'shelf_life'],
             self::SCENARIO_DESTROY => ['id'],
             self::DEDUCT_STOCK => ['id', 'stock'],

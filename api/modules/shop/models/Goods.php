@@ -13,6 +13,7 @@ use yii\helpers\Json;
  * This is the model class for table "sd_goods".
  *
  * @property int $id
+ * @property int $shop_id 商家ID
  * @property string $name 商品全称
  * @property string $short_name 商品简称
  * @property string $number 商品编号
@@ -50,7 +51,7 @@ class Goods extends ActiveRecord
     public function rules()
     {
         return [
-            [['is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['shop_id', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 128],
             [['short_name'], 'string', 'max' => 64],
             [['number'], 'string', 'max' => 255],
@@ -67,6 +68,7 @@ class Goods extends ActiveRecord
     {
         return [
             'id' => 'ID',
+            'shop_id' => '商家ID',
             'name' => '商品全称',
             'short_name' => '商品简称',
             'number' => '商品编号',

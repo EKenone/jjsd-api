@@ -12,7 +12,7 @@ use yii\db\ActiveQuery;
 
 class MenuSearch extends MenuResource
 {
-    use SearchModelScenesTrait, FormModelValidate;
+    use SearchModelScenesTrait;
 
     /**
      * @return array|array[]

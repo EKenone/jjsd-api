@@ -10,6 +10,7 @@ use Yii;
  * This is the model class for table "sd_goods_shelf_life".
  *
  * @property int $id
+ * @property int $shop_id 商家ID
  * @property string $title 单位名称
  * @property int $is_del 是否删除（0-否，1-是）
  * @property int $created_at
@@ -33,7 +34,7 @@ class GoodsShelfLife extends ActiveRecord
     public function rules()
     {
         return [
-            [['is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['shop_id', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['title'], 'string', 'max' => 15],
         ];
     }
@@ -45,6 +46,7 @@ class GoodsShelfLife extends ActiveRecord
     {
         return [
             'id' => 'ID',
+            'shop_id' => '商家ID',
             'title' => '单位名称',
             'is_del' => '是否删除（0-否，1-是）',
             'created_at' => 'Created At',

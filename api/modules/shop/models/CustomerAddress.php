@@ -9,6 +9,7 @@ use Yii;
  * This is the model class for table "sd_customer_address".
  *
  * @property int $id
+ * @property int $shop_id 商家ID
  * @property int $customer_id 关联的客户
  * @property string $consignee 收货人
  * @property string $contact_tel 联系手机号
@@ -38,7 +39,7 @@ class CustomerAddress extends \api\components\ActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['shop_id', 'customer_id', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['consignee'], 'string', 'max' => 16],
             [['contact_tel'], 'string', 'max' => 15],
             [['address'], 'string', 'max' => 255],
@@ -52,6 +53,7 @@ class CustomerAddress extends \api\components\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'shop_id' => '商家ID',
             'customer_id' => '关联的客户',
             'consignee' => '收货人',
             'contact_tel' => '联系手机号',

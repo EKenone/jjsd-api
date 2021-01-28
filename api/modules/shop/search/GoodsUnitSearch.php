@@ -25,6 +25,7 @@ class GoodsUnitSearch extends GoodsUnitResource
         return [
             [['keyword'], 'trim'],
             [['created_start', 'created_end'], 'safe'],
+            [['shop_id'], 'strCommaArr'],
         ];
     }
 
@@ -44,6 +45,10 @@ class GoodsUnitSearch extends GoodsUnitResource
     {
         $dataProvider = new ActiveDataProvider([
             'query' => $query
+        ]);
+
+        $query->andFilterWhere([
+            self::withDatabaseName('shop_id') => $this->shop_id
         ]);
 
         if ($this->keyword) {

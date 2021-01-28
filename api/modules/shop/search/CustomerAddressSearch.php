@@ -25,6 +25,7 @@ class CustomerAddressSearch extends CustomerAddressResource
         return [
             [['keyword'], 'trim'],
             [['created_start', 'created_end'], 'safe'],
+            [['shop_id'], 'strCommaArr'],
         ];
     }
 
@@ -44,6 +45,10 @@ class CustomerAddressSearch extends CustomerAddressResource
     {
         $dataProvider = new ActiveDataProvider([
             'query' => $query
+        ]);
+
+        $query->andFilterWhere([
+            self::withDatabaseName('shop_id') => $this->shop_id
         ]);
 
         if ($this->keyword) {

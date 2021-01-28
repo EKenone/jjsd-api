@@ -26,6 +26,7 @@ class OrderSearch extends OrderResource
             [['keyword', 'order_no'], 'trim'],
             [['status'], 'in', 'range' => array_keys(self::statusMap())],
             [['created_start', 'created_end', $this->scenesProperty()], 'safe'],
+            [['shop_id'], 'strCommaArr'],
         ];
     }
 
@@ -48,7 +49,8 @@ class OrderSearch extends OrderResource
         ]);
 
         $query->andFilterWhere([
-            self::withDatabaseName('status') => $this->status
+            self::withDatabaseName('shop_id') => $this->shop_id,
+            self::withDatabaseName('status') => $this->status,
         ]);
 
         if ($this->keyword) {

@@ -22,7 +22,7 @@ class AdminForm extends Admin
     public function rules()
     {
         return [
-            [['id', 'username', 'password', 'name', 'password_repeat', 'role_id'], 'required'],
+            [['id', 'shop_id', 'username', 'password', 'name', 'password_repeat', 'role_id'], 'required'],
             [['password_repeat'], 'compare', 'compareAttribute' => 'password'],
             [['username', 'password', 'id'], $this->validateMethod()],
             [['status'], 'in', 'range' => [self::STATUS_OK, self::STATUS_FREEZE]],
@@ -35,7 +35,7 @@ class AdminForm extends Admin
     public function scenarios()
     {
         return array_merge(parent::scenarios(), [
-            self::SCENARIO_STORE => ['username', 'password', 'name', 'password_repeat', 'role_id'],
+            self::SCENARIO_STORE => ['shop_id', 'username', 'password', 'name', 'password_repeat', 'role_id'],
             self::SCENARIO_UPDATE => ['id', 'name', 'role_id', 'status'],
             self::SCENARIO_DESTROY => ['id'],
             self::SCENARIO_LOGIN => ['username', 'password'],

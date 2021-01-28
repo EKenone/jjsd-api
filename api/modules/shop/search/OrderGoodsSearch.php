@@ -12,7 +12,7 @@ use yii\db\ActiveQuery;
 
 class OrderGoodsSearch extends OrderGoodsResource
 {
-    use FormModelValidate, SearchModelScenesTrait;
+    use SearchModelScenesTrait;
 
     public $no_page;
     public $sort_val;
@@ -26,6 +26,7 @@ class OrderGoodsSearch extends OrderGoodsResource
             [['order_id'], 'integer'],
             [['no_page'], 'in', 'range' => [0, 1]],
             [['sort_val'], 'sortValToArr'],
+            [['shop_id'], 'strCommaArr'],
         ];
     }
 
@@ -48,7 +49,8 @@ class OrderGoodsSearch extends OrderGoodsResource
         ]);
 
         $query->andFilterWhere([
-            self::withDatabaseName('order_id') => $this->order_id
+            self::withDatabaseName('shop_id') => $this->shop_id,
+            self::withDatabaseName('order_id') => $this->order_id,
         ]);
 
         if ($this->no_page) {

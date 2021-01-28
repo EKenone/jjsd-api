@@ -4,6 +4,7 @@ namespace api\modules\admin\models;
 
 use api\components\ActiveRecord;
 use api\modules\admin\models\query\AdminQuery;
+use api\modules\shop\models\Shop;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -11,6 +12,7 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "sd_admin".
  *
  * @property int $id
+ * @property int $shop_id 商家ID
  * @property string $name 姓名
  * @property string $username 账号
  * @property string $password 密码
@@ -21,7 +23,7 @@ use yii\helpers\ArrayHelper;
  * @property int $created_by
  * @property int $updated_by
  *
- *
+ * @property Shop $shop
  * @property AdminRole $adminRole
  * @property Role $role
  *
@@ -45,7 +47,7 @@ class Admin extends ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['shop_id', 'status', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 64],
             [['username'], 'string', 'max' => 16],
             [['password'], 'string', 'max' => 255],
@@ -59,6 +61,7 @@ class Admin extends ActiveRecord
     {
         return [
             'id' => 'ID',
+            'shop_id' => '商家ID',
             'name' => '姓名',
             'username' => '账号',
             'password' => '密码',
@@ -97,10 +100,18 @@ class Admin extends ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getShop()
+    {
+        return $this->hasOne(Shop::class, ['id' => 'shop_id']);
+    }
+
+    /**
      * @return array
      */
     public function adminRoleIds()
     {
-        return ArrayHelper::getColumn((array)$this->adminRole, 'role_id')?:[];
+        return ArrayHelper::getColumn((array)$this->adminRole, 'role_id') ?: [];
     }
 }

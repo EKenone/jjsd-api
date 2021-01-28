@@ -10,6 +10,7 @@ use Yii;
  * This is the model class for table "sd_customer".
  *
  * @property int $id
+ * @property int $shop_id 商家ID
  * @property string $name 客户姓名
  * @property string $phone 客户手机号
  * @property string $loc_number 客户固话
@@ -19,6 +20,9 @@ use Yii;
  * @property int $updated_at
  * @property int $created_by
  * @property int $updated_by
+ *
+ * @property Shop $shop
+ *
  */
 class Customer extends ActiveRecord
 {
@@ -36,7 +40,7 @@ class Customer extends ActiveRecord
     public function rules()
     {
         return [
-            [['is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['shop_id', 'shop_id', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['name', 'wx'], 'string', 'max' => 64],
             [['phone', 'loc_number'], 'string', 'max' => 15],
         ];
@@ -49,6 +53,7 @@ class Customer extends ActiveRecord
     {
         return [
             'id' => 'ID',
+            'shop_id' => '商家ID',
             'name' => '客户姓名',
             'phone' => '客户手机号',
             'loc_number' => '客户固话',
@@ -68,5 +73,13 @@ class Customer extends ActiveRecord
     public static function find()
     {
         return new CustomerQuery(get_called_class());
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getShop()
+    {
+        return $this->hasOne(Shop::class, ['id' => 'shop_id']);
     }
 }

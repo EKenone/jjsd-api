@@ -27,6 +27,7 @@ class  GoodsShelfLifeSearch extends GoodsShelfLifeResource
             [['keyword'], 'trim'],
             [['no_page'], 'in', 'range' => [1, 0]],
             [['created_start', 'created_end',  $this->scenesProperty()], 'safe'],
+            [['shop_id'], 'strCommaArr'],
         ];
     }
 
@@ -46,6 +47,10 @@ class  GoodsShelfLifeSearch extends GoodsShelfLifeResource
     {
         $dataProvider = new ActiveDataProvider([
             'query' => $query
+        ]);
+
+        $query->andFilterWhere([
+            self::withDatabaseName('shop_id') => $this->shop_id
         ]);
 
         if ($this->keyword) {

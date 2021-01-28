@@ -5,15 +5,13 @@ namespace api\modules\shop\models;
 use api\caches\traits\RefreshModelsCacheTrait;
 use api\components\ActiveRecord;
 use api\modules\shop\models\query\OrderQuery;
-use common\helpers\BaseHelper;
-use Yii;
 use yii\db\ActiveQuery;
-use yii\helpers\Json;
 
 /**
  * This is the model class for table "sd_order".
  *
  * @property int $id
+ * @property int $shop_id 商家ID
  * @property string $order_no 订单号
  * @property int $customer_id 客户ID
  * @property int $address_id 收货地址ID
@@ -58,7 +56,7 @@ class Order extends ActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'address_id', 'status', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['shop_id', 'customer_id', 'address_id', 'status', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['consignee', 'order_no'], 'string', 'max' => 16],
             [['amount', 'real_amount'], 'number'],
             [['contact_tel'], 'string', 'max' => 15],
@@ -73,6 +71,7 @@ class Order extends ActiveRecord
     {
         return [
             'id' => 'ID',
+            'shop_id' => '商家ID',
             'order_no' => '订单号',
             'customer_id' => '客户ID',
             'address_id' => '收货地址ID',

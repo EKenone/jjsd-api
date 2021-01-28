@@ -29,7 +29,7 @@ class OrderForm extends Order
     public function rules()
     {
         return [
-            [['id', 'order_no', 'customer_id', 'address_id', 'goods_id', 'price', 'book_num', 'consignee', 'address', 'amount'], 'required'],
+            [['id', 'shop_id', 'order_no', 'customer_id', 'address_id', 'goods_id', 'price', 'book_num', 'consignee', 'address', 'amount'], 'required'],
             [['remark', 'contact_tel'], 'default', 'value' => ''],
             [['status'], 'integer'],
             [['real_amount', 'order_id'], 'default', 'value' => 0],
@@ -42,7 +42,7 @@ class OrderForm extends Order
     public function scenarios()
     {
         return array_merge(parent::scenarios(), [
-            self::SCENARIO_STORE => ['order_no', 'customer_id', 'address_id', 'consignee', 'contact_tel', 'address', 'amount', 'remark', 'status'],
+            self::SCENARIO_STORE => ['shop_id', 'order_no', 'customer_id', 'address_id', 'consignee', 'contact_tel', 'address', 'amount', 'remark', 'status'],
             self::SCENARIO_UPDATE => ['order_no', 'customer_id', 'address_id', 'consignee', 'contact_tel', 'address', 'amount', 'remark', 'status'],
             self::SCENARIO_DESTROY => ['id'],
             self::BOOK_GOODS => ['customer_id', 'address_id', 'goods_id', 'price', 'book_num', 'order_id'],

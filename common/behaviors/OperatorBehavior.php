@@ -8,7 +8,6 @@
 namespace common\behaviors;
 
 use api\resources\User;
-use common\models\center\AdminUser;
 use yii\base\InvalidCallException;
 use yii\behaviors\AttributeBehavior;
 use yii\db\BaseActiveRecord;

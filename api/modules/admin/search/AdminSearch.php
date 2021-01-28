@@ -12,7 +12,7 @@ use yii\db\ActiveQuery;
 
 class AdminSearch extends AdminResource
 {
-    use SearchModelScenesTrait, FormModelValidate;
+    use SearchModelScenesTrait;
 
     public $keyword;
     public $created_start;
@@ -26,6 +26,7 @@ class AdminSearch extends AdminResource
         return [
             [['keyword'], 'trim'],
             [['created_start', 'created_end'], 'dateToTime'],
+            [['shop_id'], 'strCommaArr'],
         ];
     }
 
@@ -45,6 +46,10 @@ class AdminSearch extends AdminResource
     {
         $dataProvider = new ActiveDataProvider([
             'query' => $query
+        ]);
+
+        $query->andFilterWhere([
+            self::withDatabaseName('shop_id') => $this->shop_id
         ]);
 
         if ($this->keyword) {

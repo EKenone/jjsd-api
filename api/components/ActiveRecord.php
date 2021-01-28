@@ -7,6 +7,7 @@ namespace api\components;
 use common\behaviors\ModelTimeBehavior;
 use common\behaviors\OperatorBehavior;
 use common\traits\DatabaseNameTrait;
+use common\traits\FormModelValidate;
 use common\traits\ModelFieldTypeTrait;
 use yii\db\ActiveRecord as BaseActiveRecord;
 
@@ -18,7 +19,7 @@ use yii\db\ActiveRecord as BaseActiveRecord;
  */
 class ActiveRecord extends BaseActiveRecord
 {
-    use DatabaseNameTrait, ModelFieldTypeTrait;
+    use DatabaseNameTrait, ModelFieldTypeTrait, FormModelValidate;
 
     /**
      * 删除标识

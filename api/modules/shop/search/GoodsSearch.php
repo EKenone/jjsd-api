@@ -27,6 +27,7 @@ class GoodsSearch extends GoodsResource
             [['keyword'], 'trim'],
             [['no_page'], 'in', 'range' => [0, 1]],
             [['created_start', 'created_end', $this->scenesProperty()], 'safe'],
+            [['shop_id'], 'strCommaArr'],
         ];
     }
 
@@ -46,6 +47,10 @@ class GoodsSearch extends GoodsResource
     {
         $dataProvider = new ActiveDataProvider([
             'query' => $query
+        ]);
+
+        $query->andFilterWhere([
+            self::withDatabaseName('shop_id') => $this->shop_id
         ]);
 
         if ($this->keyword) {

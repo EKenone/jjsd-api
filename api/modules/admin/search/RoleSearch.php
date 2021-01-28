@@ -12,7 +12,7 @@ use yii\db\ActiveQuery;
 
 class RoleSearch extends RoleResource
 {
-    use SearchModelScenesTrait, FormModelValidate;
+    use SearchModelScenesTrait;
 
     public $keyword;
     public $created_start;

@@ -1,33 +1,33 @@
 <?php
 
-namespace api\modules\admin\models;
+namespace api\modules\shop\models;
 
 use api\components\ActiveRecord;
-use api\modules\admin\models\query\AdminRoleQuery;
+use api\modules\shop\models\query\ShopQuery;
 use Yii;
 
 /**
- * This is the model class for table "sd_admin_role".
+ * This is the model class for table "sd_shop".
  *
  * @property int $id
- * @property int $shop_id
- * @property int $admin_id 管理员ID
- * @property int $role_id 角色ID
+ * @property string $name 商家名称
+ * @property string $print_name 订单打印的名称
+ * @property string $address 商家地址
+ * @property string $tel 商家联系方式
  * @property int $is_del 是否删除（0-否，1-是）
  * @property int $created_at
  * @property int $updated_at
  * @property int $created_by
  * @property int $updated_by
- *
  */
-class AdminRole extends ActiveRecord
+class Shop extends ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'sd_admin_role';
+        return 'sd_shop';
     }
 
     /**
@@ -36,7 +36,9 @@ class AdminRole extends ActiveRecord
     public function rules()
     {
         return [
-            [['shop_id', 'admin_id', 'role_id', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['name', 'print_name'], 'string', 'max' => 64],
+            [['address', 'tel'], 'string', 'max' => 255],
         ];
     }
 
@@ -47,9 +49,10 @@ class AdminRole extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'shop_id' => '商家ID',
-            'admin_id' => '管理员ID',
-            'role_id' => '角色ID',
+            'name' => '商家名称',
+            'print_name' => '订单打印的名称',
+            'address' => '商家地址',
+            'tel' => '商家联系方式',
             'is_del' => '是否删除（0-否，1-是）',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -60,10 +63,10 @@ class AdminRole extends ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return AdminRoleQuery the active query used by this AR class.
+     * @return ShopQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new AdminRoleQuery(get_called_class());
+        return new ShopQuery(get_called_class());
     }
 }

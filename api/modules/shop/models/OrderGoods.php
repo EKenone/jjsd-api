@@ -11,6 +11,7 @@ use Yii;
  * This is the model class for table "sd_order_goods".
  *
  * @property int $id
+ * @property int $shop_id 商家ID
  * @property int $order_id 订单ID
  * @property int $goods_id 商品ID
  * @property string $name 商品全称
@@ -45,7 +46,7 @@ class OrderGoods extends ActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'goods_id', 'purchase_price', 'price', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['shop_id', 'order_id', 'goods_id', 'purchase_price', 'price', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 128],
             [['book_num'], 'number'],
             [['number'], 'string', 'max' => 255],
@@ -60,6 +61,7 @@ class OrderGoods extends ActiveRecord
     {
         return [
             'id' => 'ID',
+            'shop_id' => '商家ID',
             'order_id' => '订单ID',
             'goods_id' => '商品ID',
             'name' => '商品全称',

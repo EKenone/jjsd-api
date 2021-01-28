@@ -28,6 +28,25 @@ abstract class ServiceAbstract extends BaseObject implements CurdInterface
     public $searchClass;
 
     /**
+     * 默认所有数组参数带上的基础参数
+     * @return array
+     */
+    protected function baseParams()
+    {
+        return [];
+    }
+
+    /**
+     * 合并其他默认数据
+     * @param $data
+     * @return array
+     */
+    protected function mergeData($data)
+    {
+        return array_merge($this->baseParams(), $data);
+    }
+
+    /**
      * 通用列表
      * @param array $params
      * @return array|ActiveDataProvider
@@ -38,7 +57,7 @@ abstract class ServiceAbstract extends BaseObject implements CurdInterface
         $params = $params ?: \Yii::$app->request->get();
         $search = $this->newSearch();
         $search->scenes = $params['scenes'] ?? ActiveRecord::FIELD_INDEX;
-        $search->load($params, '');
+        $search->load($this->mergeData($params), '');
         if (!$search->validate()) {
             \Yii::error($search->getFirstErrors());
             return [];
@@ -58,7 +77,7 @@ abstract class ServiceAbstract extends BaseObject implements CurdInterface
         /** @var ActiveRecord $form */
         $form = $this->newForm();
         $form->setScenario($form::SCENARIO_STORE);
-        $form->load($data, '');
+        $form->load($this->mergeData($data), '');
         if (!$form->save()) {
             \Yii::error($form->getFirstErrors());
         }
@@ -78,7 +97,7 @@ abstract class ServiceAbstract extends BaseObject implements CurdInterface
         /** @var ActiveRecord $form */
         $form = $this->idForm($data['id']);
         $form->setScenario($form::SCENARIO_UPDATE);
-        $form->load($data, '');
+        $form->load($this->mergeData($data), '');
         if (!$form->save()) {
             \Yii::error($form->getFirstErrors());
         }
@@ -104,7 +123,7 @@ abstract class ServiceAbstract extends BaseObject implements CurdInterface
         }
 
         $form->setScenario($form::SCENARIO_DESTROY);
-        $form->load($data, '');
+        $form->load($this->mergeData($data), '');
         if (!$form->destroy()) {
             \Yii::error($form->getFirstErrors());
         }
@@ -143,7 +162,7 @@ abstract class ServiceAbstract extends BaseObject implements CurdInterface
         /** @var ActiveRecord $form */
         $form = $this->newForm();
         $form->setScenario($scenes ?: $form::SCENARIO_DEFAULT);
-        $form->load($data, '');// 这里也可以替换成setAttributes()方法的, 只是觉得load的字母比较少
+        $form->load($this->mergeData($data), '');// 这里也可以替换成setAttributes()方法的, 只是觉得load的字母比较少
         if (!$form->validate()) {
             \Yii::error($form->getFirstErrors());
         }
