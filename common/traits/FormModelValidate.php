@@ -49,7 +49,7 @@ trait FormModelValidate
      */
     public function uniqNotDel($attr)
     {
-        if ($this->$attr && self::find()->notDelete()->andWhere([$attr => $this->$attr])->andFilterWhere(['<>', 'id', $this->id])->exists()) {
+        if ($this->$attr && self::find()->notDelete()->andWhere(['shop_id' => \Yii::$app->user->identity->shop_id, $attr => $this->$attr])->andFilterWhere(['<>', 'id', $this->id])->exists()) {
             $this->addError($attr, $this->getAttributeLabel($attr) . '已存在');
         }
     }
