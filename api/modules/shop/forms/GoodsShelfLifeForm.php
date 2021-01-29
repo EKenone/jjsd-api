@@ -18,6 +18,7 @@ class GoodsShelfLifeForm extends GoodsShelfLife
     {
         return [
             [['id', 'title', 'shop_id'], 'required'],
+            [['title'], 'uniqNotDel'],
         ];
     }
 

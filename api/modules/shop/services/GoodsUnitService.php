@@ -89,6 +89,7 @@ class GoodsUnitService extends Service
     {
         return GoodsUnitResource::find()
             ->select('title')
+            ->andWhere(['shop_id' => $this->user()->shop_id])
             ->notDelete()
             ->orderBy('id desc')
             ->all();
