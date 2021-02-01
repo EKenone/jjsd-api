@@ -204,7 +204,7 @@ abstract class CacheAbstract extends BaseObject implements CacheInterface
      */
     protected function likeFields()
     {
-        return ['keyword'];
+        return [];
     }
 
     /**
