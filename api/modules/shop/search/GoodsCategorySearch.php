@@ -4,12 +4,12 @@
 namespace api\modules\shop\search;
 
 
-use api\modules\shop\resources\GoodsResource;
+use api\modules\shop\resources\GoodsCategoryResource;
 use common\traits\SearchModelScenesTrait;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
-class GoodsSearch extends GoodsResource
+class  GoodsCategorySearch extends GoodsCategoryResource
 {
     use SearchModelScenesTrait;
 
@@ -25,9 +25,8 @@ class GoodsSearch extends GoodsResource
     {
         return [
             [['keyword'], 'trim'],
-            [['no_page'], 'in', 'range' => [0, 1]],
-            [['created_start', 'created_end', $this->scenesProperty()], 'safe'],
-            [['shop_id'], 'strCommaArr'],
+            [['no_page'], 'in', 'range' => [1, 0]],
+            [['created_start', 'created_end',  $this->scenesProperty()], 'safe'],
         ];
     }
 
@@ -49,17 +48,8 @@ class GoodsSearch extends GoodsResource
             'query' => $query
         ]);
 
-        $query->andFilterWhere([
-            self::withDatabaseName('shop_id') => $this->shop_id
-        ]);
-
         if ($this->keyword) {
-            $query->andWhere([
-                'OR',
-                ['like', self::withDatabaseName('name'), $this->keyword],
-                ['like', self::withDatabaseName('short_name'), $this->keyword],
-                ['like', self::withDatabaseName('number'), $this->keyword],
-            ]);
+            $query->andWhere(['like', self::withDatabaseName('title'), $this->keyword]);
         }
 
         if ($this->created_start) {
@@ -80,19 +70,10 @@ class GoodsSearch extends GoodsResource
     }
 
     /**
+     * 这里是index场景对sql的特殊处理
      * @param ActiveQuery $query
      */
     protected function scenesIndex(ActiveQuery $query)
     {
-        $query->with(['goodsCategory']);
-    }
-
-    /**
-     * @param ActiveQuery $query
-     */
-    protected function scenesSelect(ActiveQuery $query)
-    {
-        $this->no_page = 1;
-        $query->limit(200);
     }
 }

@@ -1,30 +1,30 @@
 <?php
 
 
-namespace {{BASE_NAMESPACE}}\services;
+namespace api\modules\shop\services;
 
 
-use {{FORM}};
-use {{RESOURCE}};
-use {{SEARCH}};
+use api\modules\shop\forms\GoodsCategoryForm;
+use api\modules\shop\resources\GoodsCategoryResource;
+use api\modules\shop\search\GoodsCategorySearch;
 use yii\base\UserException;
 
-class {{MODEL_NAME}}Service extends Service
+class GoodsCategoryService extends Service
 {
     /**
      * @var string
      */
-    public $formClass = {{FORM_NAME}}::class;
+    public $formClass = GoodsCategoryForm::class;
 
     /**
      * @var string
      */
-    public $resourceClass = {{RESOURCE_NAME}}::class;
+    public $resourceClass = GoodsCategoryResource::class;
 
     /**
      * @var string
      */
-    public $searchClass = {{SEARCH_NAME}}::class;
+    public $searchClass = GoodsCategorySearch::class;
 
     /**
      * @param array $params
@@ -37,8 +37,9 @@ class {{MODEL_NAME}}Service extends Service
     }
 
     /**
+     * 商品单位详情
      * @param int $id
-     * @return {{RESOURCE_NAME}}
+     * @return GoodsCategoryResource
      * @throws UserException
      */
     public function show($id)
@@ -48,7 +49,7 @@ class {{MODEL_NAME}}Service extends Service
 
     /**
      * @param array $data
-     * @return {{FORM_NAME}}
+     * @return GoodsCategoryForm
      * @throws UserException
      */
     public function store($data = [])
@@ -58,7 +59,7 @@ class {{MODEL_NAME}}Service extends Service
 
     /**
      * @param array $data
-     * @return {{FORM_NAME}}
+     * @return GoodsCategoryForm
      * @throws UserException
      */
     public function update($data = [])
@@ -68,7 +69,7 @@ class {{MODEL_NAME}}Service extends Service
 
     /**
      * @param array $data
-     * @return {{FORM_NAME}}
+     * @return GoodsCategoryForm
      * @throws UserException
      */
     public function destroy($data = [])

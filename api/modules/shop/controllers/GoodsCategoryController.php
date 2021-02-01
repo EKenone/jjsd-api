@@ -1,24 +1,24 @@
 <?php
 
 
-namespace {{BASE_NAMESPACE}}\controllers;
+namespace api\modules\shop\controllers;
 
 
-use {{SERVICE}};
+use api\modules\shop\services\GoodsCategoryService;
 use yii\base\UserException;
 
 /**
- * Class {{MODEL_NAME}}Controller
- * @package {{BASE_NAMESPACE}}\controllers
+ * Class GoodsFormatController
+ * @package api\modules\shop\controllers
  *
- * @property {{SERVICE_NAME}} $service
+ * @property GoodsCategoryService $service
  */
-class {{MODEL_NAME}}Controller extends {{CONTROLLER}}
+class GoodsCategoryController extends \api\components\Controller
 {
     /**
      * @var string
      */
-    public $serviceClass = {{SERVICE_NAME}}::class;
+    public $serviceClass = GoodsCategoryService::class;
 
     /**
      * @return mixed

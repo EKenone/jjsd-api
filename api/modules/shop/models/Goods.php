@@ -32,6 +32,8 @@ use yii\helpers\Json;
  * @property int $created_by
  * @property int $updated_by
  *
+ * @property GoodsCategory[] $goodsCategory
+ *
  */
 class Goods extends ActiveRecord
 {
@@ -99,6 +101,22 @@ class Goods extends ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGoodsCategoryRelation()
+    {
+        return $this->hasMany(GoodsCategoryRelation::class, ['goods_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGoodsCategory()
+    {
+        return $this->hasMany(GoodsCategory::class, ['id' => 'category_id'])->via('goodsCategoryRelation');
+    }
+
+    /**
      * 图片资源
      * @return array|mixed|null
      */
@@ -121,5 +139,20 @@ class Goods extends ActiveRecord
     public function stockShow()
     {
         return intval($this->stock);
+    }
+
+    /**
+     * @return array
+     */
+    public function category()
+    {
+        if (!$this->goodsCategory) {
+            return [];
+        }
+        $id = [];
+        foreach ($this->goodsCategory as $item) {
+            $id[] = $item->id;
+        }
+        return $id;
     }
 }

@@ -103,10 +103,19 @@ class CreateCurdTmp extends BaseObject
         $model = new $this->modelClass();
         $fields = $model->getAttributes(null, ['id', 'is_del', 'created_at', 'updated_at', 'created_by', 'updated_by']);
         $fieldStr = '';
+        $resourceFields = "'id' => function () {
+                return \$this->id;
+            },\r\n            ";
         foreach ($fields as $field => $val) {
             $fieldStr .= "'$field', ";
+            $resourceFields .= "'$field' => function () {
+                return \$this->$field;
+            },\r\n            ";
         }
         $fieldStr = rtrim($fieldStr, ', ');
+        $resourceFields .= "'created_date' => function () {
+                return date('Y-m-d H:i', \$this->created_at);
+            },";
 
         foreach ($createData as $item) {
             $formContent = str_replace('{{BASE_NAMESPACE}}', trim($this->space, '\\'), $item['content']);
@@ -141,6 +150,10 @@ class CreateCurdTmp extends BaseObject
 
             if (strpos($formContent, '{{RESOURCE_NAME}}') !== false) {
                 $formContent = str_replace('{{RESOURCE_NAME}}', $resourceName, $formContent);
+            }
+
+            if (strpos($formContent, '{{RESOURCE_FIELD}}') !== false) {
+                $formContent = str_replace('{{RESOURCE_FIELD}}', $resourceFields, $formContent);
             }
 
             if (strpos($formContent, '{{FORM}}') !== false) {

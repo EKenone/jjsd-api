@@ -1,0 +1,23 @@
+<?php
+
+namespace api\modules\{{MODULE_NAME}};
+
+/**
+ * clue module definition class
+ */
+class Module extends \yii\base\Module
+{
+    /**
+     * {@inheritdoc}
+     */
+    public $controllerNamespace = 'api\modules\{{MODULE_NAME}}\controllers';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function init()
+    {
+        parent::init();
+        \Yii::$container->set('yii\data\Pagination', 'common\components\Pagination');   //加载自动分页
+    }
+}

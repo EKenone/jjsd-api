@@ -5,10 +5,24 @@ namespace console\controllers;
 
 
 use console\components\crudtmp\CreateCurdTmp;
+use console\components\crudtmp\InitCrudTmp;
 use yii\console\Controller;
 
 class CurdTmpController extends Controller
 {
+    /**
+     * 初始化模块
+     * @param string $moduleName 模块名称  例子：broker
+     */
+    public function actionInitCrud($moduleName)
+    {
+        $res = (new InitCrudTmp([
+            'moduleName' => $moduleName,
+            'basePath' => __DIR__ . '/../../'
+        ]))->done();
+        echo $res . "\r\n";
+    }
+
     /**
      * 创建crud资源模板
      * @param string $modelClass 例子: \api\modules\broker\models\BrokerTest

@@ -94,6 +94,9 @@ class GoodsResource extends Goods
             },
             'created_date' => function () {
                 return date('Y-m-d H:i:s', $this->created_at);
+            },
+            'category' => function () {
+                return $this->category();
             }
         ];
     }

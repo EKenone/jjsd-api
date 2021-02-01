@@ -1,0 +1,12 @@
+<?php
+
+
+namespace api\modules\{{MODULE_NAME}}\services;
+
+
+use api\components\autocrud\AutoCrudService;
+
+class Service extends AutoCrudService
+{
+
+}

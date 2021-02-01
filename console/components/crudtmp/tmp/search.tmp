@@ -8,7 +8,7 @@ use common\traits\SearchModelScenesTrait;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
-class  {{MODEL_NAME}}Search extends \{{RESOURCE}}
+class {{MODEL_NAME}}Search extends \{{RESOURCE}}
 {
     use SearchModelScenesTrait;
 
@@ -26,6 +26,7 @@ class  {{MODEL_NAME}}Search extends \{{RESOURCE}}
             [['keyword'], 'trim'],
             [['no_page'], 'in', 'range' => [1, 0]],
             [['created_start', 'created_end',  $this->scenesProperty()], 'safe'],
+            [[$this->scenesProperty()], 'in', 'range' => [self::FIELD_INDEX]], // 资源字段场景值
         ];
     }
 
@@ -34,14 +35,16 @@ class  {{MODEL_NAME}}Search extends \{{RESOURCE}}
      */
     public function baseQuery(): ActiveQuery
     {
-        return self::find()->notDelete();
+        // 这里添加sql必定会存在的语句处理，例如：查询非删除数据，格式如下
+        // self::find()->notDelete();
+        return self::find();
     }
 
     /**
-     * @param ActiveQuery $query
+     * @param ActiveQuery|null $query
      * @return ActiveDataProvider
      */
-    public function commonSearch(ActiveQuery $query): ActiveDataProvider
+    public function search(ActiveQuery $query = null): ActiveDataProvider
     {
         $dataProvider = new ActiveDataProvider([
             'query' => $query
@@ -63,7 +66,7 @@ class  {{MODEL_NAME}}Search extends \{{RESOURCE}}
             $dataProvider->pagination = false;
         }
 
-        $query->addOrderBy([self::withDatabaseName('id')=>SORT_DESC]);
+        $query->addOrderBy([self::withDatabaseName('id') => SORT_DESC]);
 
         return $dataProvider;
     }
@@ -74,5 +77,6 @@ class  {{MODEL_NAME}}Search extends \{{RESOURCE}}
      */
     protected function scenesIndex(ActiveQuery $query)
     {
+        // $query->with(['customer']);
     }
 }

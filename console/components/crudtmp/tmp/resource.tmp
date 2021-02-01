@@ -7,13 +7,22 @@ namespace {{BASE_NAMESPACE}}\resources;
 class {{MODEL_NAME}}Resource extends {{MODEL}}
 {
     /**
-     * 这里是index场景返回给前端的字段
+     * 模型的基本字段
      * @return \Closure[]
+     */
+    public function base()
+    {
+        return [
+            {{RESOURCE_FIELD}}
+        ];
+    }
+
+    /**
+     * 模型的额外字段
+     * @return array
      */
     public function fieldIndex()
     {
-        return [
-
-        ];
+        return [];
     }
 }

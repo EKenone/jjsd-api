@@ -1,0 +1,12 @@
+<?php
+
+
+namespace api\modules\{{MODULE_NAME}}\components;
+
+
+use api\components\autocrud\AutoCrudController;
+
+class Controller extends AutoCrudController
+{
+
+}
