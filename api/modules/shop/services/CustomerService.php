@@ -119,7 +119,7 @@ class CustomerService extends Service
             'customer_id' => $customer->id,
             'consignee' => $customer->name,
             'consignee_tel' => $customer->phone,
-            'address' => $customer->address?:$customer->name
+            'address' => $form->address?:$form->name
         ]);
 
         if ($address->hasErrors()) {

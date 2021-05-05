@@ -16,6 +16,7 @@ class CustomerAddressSearch extends CustomerAddressResource
     public $keyword;
     public $created_start;
     public $created_end;
+    public $no_page;
 
     /**
      * @return array|array[]
@@ -24,7 +25,7 @@ class CustomerAddressSearch extends CustomerAddressResource
     {
         return [
             [['keyword'], 'trim'],
-            [['created_start', 'created_end'], 'safe'],
+            [['created_start', 'created_end', 'no_page'], 'safe'],
             [['shop_id'], 'strCommaArr'],
         ];
     }
@@ -66,6 +67,10 @@ class CustomerAddressSearch extends CustomerAddressResource
 
         if ($this->created_end) {
             $query->andWhere(['<=', self::withDatabaseName('created_at'), strtotime($this->created_end)]);
+        }
+
+        if ($this->no_page) {
+            $dataProvider->pagination = false;
         }
 
         $query->addOrderBy([self::withDatabaseName('id')=>SORT_DESC]);
