@@ -32,7 +32,7 @@ class GoodsForm extends Goods
             [['stock'], 'number', 'min' => -1],
             [['product_date', 'shelf_life', 'number'], 'string'],
             [['img_source'], $this->validateMethod(), 'skipOnEmpty' => false],
-            [['category'], 'safe'],
+            [['category'], 'default', 'value' => []],
         ];
     }
 

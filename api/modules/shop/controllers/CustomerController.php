@@ -38,7 +38,7 @@ class CustomerController extends Controller
      */
     public function actionStore()
     {
-        return $this->service->store(\Yii::$app->request->post());
+        return $this->service->createCustomerAndAddress(\Yii::$app->request->post());
     }
 
     /**
