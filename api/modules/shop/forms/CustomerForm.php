@@ -22,7 +22,7 @@ class CustomerForm extends Customer
     {
         return [
             [['id', 'name', 'shop_id'], 'required'],
-            [['phone'], 'uniqNotDel'],
+            [['name'], 'uniqNotDel'],
             [['phone'], 'checkPhone'],
             [['loc_number'], 'checkLocNumber'],
             [['wx'], 'checkWxId'],
